@@ -20,7 +20,6 @@ export class BehaviorSky extends THREE.Mesh {
 			}
 			`
 		var geometry = new THREE.SphereGeometry(-500, 60, 40);
-		console.log('skybox', props.art);
 		var skybox = props.art || '/art/eso0932a.jpg';
 		var uniforms = {
 		  texture: { type: 't', value: THREE.ImageUtils.loadTexture(skybox) }
