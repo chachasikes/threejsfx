@@ -8,7 +8,7 @@ export class BehaviorLight extends THREE.DirectionalLight {
 		if(props.position) this.position.set(props.position.x,props.position.y,props.position.z)
 
 		this.target.position.set(0,0,0)
-		this.castShadow = true
+		this.castShadow = props.castShadow || true
 
 		// debug - make a visible representation
 		let color = props.color || 0xFFFF00
