@@ -66,7 +66,7 @@ export let mything = {
 		{
 			name:"scene_1",
 			mesh:{
-				art:"art/quillustrations/forest_rough_sketch",
+				art:"threejsfx/art/quillustrations/forest_rough_sketch",
 				position:{x:0,y:0,z:0},
 				scale:{x:10,y:10,z:10},
 				color:0x27ff12,
