@@ -13,6 +13,7 @@
   "license": "BSD",
   "devDependencies": {
     "@huth/utils": "^1.0.1",
+    "@wildpeaks/three-webpack-plugin": "^2.0.0",
     "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.5",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
@@ -23,6 +24,7 @@
     "mini-css-extract-plugin": "^0.4.2",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
+    "three": "^0.103.0",
     "ts-loader": "^5.3.3",
     "typescript": "^3.4.3",
     "webpack": "^4.29.6",

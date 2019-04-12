@@ -1,4 +1,5 @@
 const path = require('path');
+const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -23,4 +24,8 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    //...
+    new ThreeWebpackPlugin()
+  ]
 };
