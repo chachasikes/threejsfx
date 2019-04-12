@@ -1,6 +1,7 @@
 
 // Basic
 import {BehaviorRenderer, BehaviorScene, BehaviorCamera} from './BehaviorRenderer.js'
+
 import {BehaviorLight} from './BehaviorLight.js'
 import {BehaviorMesh} from './BehaviorMesh.js'
 
@@ -120,16 +121,25 @@ export class Blob {
 			}
 			// instance behavior
 			if(true) {
-				let className = "Behavior"+name.charAt(0).toUpperCase() + name.slice(1)
+				let constructorName = "Behavior"+name.charAt(0).toUpperCase() + name.slice(1)
+
+
 				// find the class
-				let classRef = eval(className)
+				let libs = {}
+				function init(constructorName) {
+					libs[constructorName] = function () { return this }
+					return libs
+				}
+				init(constructorName)
+
 				// instance a behavior passing it the bucket itself and the properties for the field
-				let behavior = new classRef(props,blob)
+				let behavior = new libs[constructorName](props,blob)
+				console.log('b', constructorName, behavior);
 				// in each new behavior - keep a reference to this bucket
 				behavior.blob = blob
 				// in this instance - append new behavior to list of behaviors associated with this bucket
 				blob[savename] = behavior
-				console.log("Blob: added new instance of behavior " + savename + " " + className )
+				console.log("Blob: added new instance of behavior " + savename + " " + constructorName )
 				blob._speak({name:"behavior_added",behavior:behavior,parent:blob})
 			}
 		} catch(e) {

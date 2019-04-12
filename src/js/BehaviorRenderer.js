@@ -50,7 +50,7 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 
 	renderScene() {
 		if(!this.scene || !this.camera) return
-		this.render(this.scene,this.camera)			
+		this.render(this.scene,this.camera)
 	}
 
 	render3() {
@@ -82,7 +82,7 @@ export class BehaviorCamera extends THREE.PerspectiveCamera {
 export class BehaviorScene extends THREE.Scene {
 	constructor(props,blob) {
 		super()
-		blob._listen("child_added",this.on_child_added.bind(this))
+		blob._listen("child_added behavior scene",this.on_child_added.bind(this))
 		// add renderer by hand
 		this.renderer = blob.renderer = new BehaviorRenderer({},blob)
 		// add a default camera by hand - can be overridden
@@ -111,4 +111,3 @@ export class BehaviorScene extends THREE.Scene {
 		this.renderer.camera = camera
 	}
 }
-

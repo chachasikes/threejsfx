@@ -11,7 +11,7 @@
 ///
 
 // This will get instanced as the root of the scene
-export let example_animatic = {
+examples.animatic = {
 
 	// a scene behavior - has a listener that watches for any children being attached
 	scene: 0,

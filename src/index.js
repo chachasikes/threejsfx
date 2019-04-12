@@ -3,7 +3,7 @@ import {Blob} from "./js/Blob.js"
 window.onload = (blarg) => {
 	let blob = 0
 	function gotohash() {
-		if(blob) document.body.removeChild(blob.renderer.domElement) // HACK
+		if(blob && blob.renderer) document.body.removeChild(blob.renderer.domElement) // HACK
 		let hash = window.location.hash.substr(1).replace('.js', '');
 		if(!hash || !hash.length) return
     console.log( hash, examples);

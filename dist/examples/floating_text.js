@@ -1,4 +1,4 @@
-export let example_floating_text = {
+examples.example_floating_text = {
 
 	scene: 0,
 

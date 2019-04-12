@@ -1,5 +1,5 @@
 
-export let example_proton_particles = {
+examples.example_proton_particles = {
 
 	scene: 0,
 

@@ -1,73 +1,26 @@
-const path = require("path")
-// const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const path = require('path');
 
 module.exports = {
-    entry: {
-        "entry": "./src/index.js"
-    },
-    output: {
-        path: path.resolve(__dirname, "dist" ),
-        filename: "main.js",
-        chunkFilename: "[name].build.js",
-        publicPath: "/",
-    },
-    optimization: {
-        splitChunks: {
-            name: "async",
-            cacheGroups: {
-                styles: {
-                    name: "styles",
-                    test: /\.scss$/,
-                    chunks: "all"
-                }
-            }
-        }
-    },
-    stats: {
-        hash: false,
-        version: false,
-        timings: false,
-        children: false,
-        errors: true,
-    },
-    plugins: [
-        // new BundleAnalyzerPlugin(),
-        new MiniCssExtractPlugin({ allChunks: true, filename: "[name].bundle.css" }),
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js'
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
+    modules: [
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, 'src/js'),
+      'node_modules'
     ],
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                include: [
-                    path.resolve(__dirname, "node_modules/@huth")
-                ],
-                use: [
-                    {
-                        loader: "babel-loader",
-                        options: {
-                            babelrc: true,
-                            plugins: [ ]
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.scss$/,
-                sideEffects: true,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    "css-loader",
-                    "sass-loader",
-                ],
-            },
-        ]
-    },
-    resolve: {
-        symlinks: false,
-        modules: [
-            path.resolve("./"),
-            path.resolve("./node_modules")
-        ]
-    }
-}
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
+      }
+    ]
+  },
+};

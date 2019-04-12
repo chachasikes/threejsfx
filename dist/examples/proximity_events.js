@@ -1,6 +1,6 @@
 
 
-export let example_proximity_events = {
+examples.example_proximity_events = {
 
 	scene: 0,
 

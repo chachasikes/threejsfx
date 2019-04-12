@@ -1,4 +1,4 @@
-export let example_bouncing_scene = {
+examples.bouncing_scene = {
 
 	scene: 0,
 

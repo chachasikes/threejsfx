@@ -1,4 +1,4 @@
-export let example_physics_button = {
+examples.example_physics_button = {
 
 	scene: 0,
 

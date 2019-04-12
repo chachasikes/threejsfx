@@ -8,7 +8,7 @@
 ///
 
 // This will get instanced as the root of the scene
-export let example_hello_world = {
+examples.example_hello_world = {
 
 	// a scene behavior - has a listener that watches for any children being attached
 	scene: 0,

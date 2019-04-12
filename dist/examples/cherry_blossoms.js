@@ -1,5 +1,5 @@
 
-export let example_cherry_blossoms = {
+examples.cherry_blossoms = {
 
 	scene: 0,
 

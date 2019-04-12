@@ -1,4 +1,4 @@
-export let example_tick = {
+examples.example_tick = {
 
 	scene: 0,
 

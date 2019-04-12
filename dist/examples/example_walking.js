@@ -1,5 +1,5 @@
 
-export let example_walking = {
+examples.example_walking = {
 
 	scene: 0,
 
