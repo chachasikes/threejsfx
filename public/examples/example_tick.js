@@ -1,5 +1,4 @@
-export let cherry_blossoms = {
-
+export const example = {
 	scene: 0,
 
 	group: [

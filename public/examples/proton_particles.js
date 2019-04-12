@@ -1,5 +1,4 @@
-
-export let ascene = {
+export const example = {
 
 	scene: 0,
 
@@ -45,4 +44,3 @@ export let ascene = {
 		}
 	]
 }
-

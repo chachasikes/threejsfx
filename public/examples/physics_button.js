@@ -1,4 +1,4 @@
-export let mything = {
+export const example = {
 
 	scene: 0,
 
@@ -85,4 +85,3 @@ export let mything = {
 		}
 	]
 }
-

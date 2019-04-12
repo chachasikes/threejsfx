@@ -1,5 +1,4 @@
-export let scene = {
-
+export const example = {
 	scene: 0,
 
 	group: [
