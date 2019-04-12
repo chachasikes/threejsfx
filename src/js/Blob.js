@@ -91,35 +91,35 @@ export class Blob {
 		this._details = details // save this so I can regenerate a blob from scratch if desired
 		this.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO
 		this.behaviorRegistry = {
-			'BehaviorRenderer': './src/js/BehaviorRenderer.js',
-			'BehaviorScene': './src/js/BehaviorRenderer.js',
-			'BehaviorCamera': './src/js/BehaviorRenderer.js',
-			'BehaviorLight': './BehaviorLight.js',
-			'BehaviorMesh': './BehaviorMesh.js',
+			'BehaviorRenderer': 'BehaviorRenderer.js',
+			'BehaviorScene': 'BehaviorRenderer.js',
+			'BehaviorCamera': 'BehaviorRenderer.js',
+			'BehaviorLight': 'BehaviorLight.js',
+			'BehaviorMesh': 'BehaviorMesh.js',
 			// Some fancy objects
-			'BehaviorSky': './BehaviorSky.js',
-			'BehaviorHeart': './BehaviorHeart.js',
-			'BehaviorText': './BehaviorText.js',
-			'BehaviorTextPanel': './BehaviorTextPanel.js',
+			'BehaviorSky': 'BehaviorSky.js',
+			'BehaviorHeart': 'BehaviorHeart.js',
+			'BehaviorText': 'BehaviorText.js',
+			'BehaviorTextPanel': 'BehaviorTextPanel.js',
 			// Motion models for player
-			'BehaviorOrbit': './BehaviorOrbit.js',
-			'BehaviorWalk': './BehaviorWalk.js',
+			'BehaviorOrbit': 'BehaviorOrbit.js',
+			'BehaviorWalk': 'BehaviorWalk.js',
 			// Some simple behaviors
-			'BehaviorLine': './BehaviorBounce.js',
-			'BehaviorBounce': './BehaviorBounce.js',
-			'BehaviorOscillate': './BehaviorBounce.js',
-			'BehaviorWander': './BehaviorBounce.js',
-			'BehaviorStare': './BehaviorBounce.js',
-			'BehaviorParticles': './BehaviorParticles.js',
-			'BehaviorProton': './BehaviorProton.js',
-			'BehaviorEmitter': './BehaviorEmitter.js',
+			'BehaviorLine': 'BehaviorBounce.js',
+			'BehaviorBounce': 'BehaviorBounce.js',
+			'BehaviorOscillate': 'BehaviorBounce.js',
+			'BehaviorWander': 'BehaviorBounce.js',
+			'BehaviorStare': 'BehaviorBounce.js',
+			'BehaviorParticles': 'BehaviorParticles.js',
+			'BehaviorProton': 'BehaviorProton.js',
+			'BehaviorEmitter': 'BehaviorEmitter.js',
 			// Physics
-			'BehaviorPhysics': './BehaviorPhysics.js',
-			'BehaviorPhysical': './BehaviorPhysics.js',
+			'BehaviorPhysics': 'BehaviorPhysics.js',
+			'BehaviorPhysical': 'BehaviorPhysics.js',
 			// Event handling
-			'BehaviorEvent': './BehaviorEvent.js',
-			'BehaviorTick': './BehaviorTick.js',
-			'BehaviorCollide': './BehaviorCollide.js'
+			'BehaviorEvent': 'BehaviorEvent.js',
+			'BehaviorTick': 'BehaviorTick.js',
+			'BehaviorCollide': 'BehaviorCollide.js'
 		};
 		try {
 			if(!details) details = {}
@@ -155,20 +155,23 @@ export class Blob {
 			// instance behavior
 			if(true) {
 				let className = "Behavior"+name.charAt(0).toUpperCase() + name.slice(1);
-				console.log(className, this.behaviorRegistry);
 				let fileName = this.behaviorRegistry[className];
 				// find the class
 				let scope = this
 				console.log('fn', fileName);
-				import(fileName).then((module) => {
-					let keys = Object.keys(module)
-					let json = module[keys[0]]
-					scope._attach_behaviors(json)
-				})
+				if (fileName !== undefined ) {
+					import('./' + fileName).then((module) => {
+						let keys = Object.keys(module)
+						let json = module[keys[0]]
+						console.log(module);
 
-				// let classRef = eval(className)
-				// // instance a behavior passing it the bucket itself and the properties for the field
-				// let behavior = new classRef(props,blob)
+						// let classRef = eval(className)
+						// // instance a behavior passing it the bucket itself and the properties for the field
+						let behavior = new module[className](props,blob)
+						scope._attach_behaviors(json)
+
+					})
+				}
 
 
 			}

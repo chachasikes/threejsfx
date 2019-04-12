@@ -1,6 +1,50 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 	};
+/******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".main.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -26,6 +70,64 @@
 /******/ 		return module.exports;
 /******/ 	}
 /******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
+/******/
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
+/******/
+/******/ 				// start chunk loading
+/******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
+/******/
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.src = jsonpScriptSrc(chunkId);
+/******/
+/******/ 				onScriptComplete = function (event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				document.head.appendChild(script);
+/******/ 			}
+/******/ 		}
+/******/ 		return Promise.all(promises);
+/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -79,6 +181,16 @@
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
+/******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
@@ -106,6 +218,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _js_
 /***/ (function(module, exports) {
 
 eval("function webpackEmptyAsyncContext(req) {\n\t// Here Promise.resolve().then() is used instead of new Promise() to prevent\n\t// uncaught exception popping up in devtools\n\treturn Promise.resolve().then(function() {\n\t\tvar e = new Error(\"Cannot find module '\" + req + \"'\");\n\t\te.code = 'MODULE_NOT_FOUND';\n\t\tthrow e;\n\t});\n}\nwebpackEmptyAsyncContext.keys = function() { return []; };\nwebpackEmptyAsyncContext.resolve = webpackEmptyAsyncContext;\nmodule.exports = webpackEmptyAsyncContext;\nwebpackEmptyAsyncContext.id = \"./src/js lazy recursive\";\n\n//# sourceURL=webpack:///./src/js_lazy_namespace_object?");
+
+/***/ }),
+
+/***/ "./src/js lazy recursive ^\\.\\/.*$":
+/*!***********************************************!*\
+  !*** ./src/js lazy ^\.\/.*$ namespace object ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var map = {\n\t\"./BehaviorBounce\": [\n\t\t\"./src/js/BehaviorBounce.js\"\n\t],\n\t\"./BehaviorBounce.js\": [\n\t\t\"./src/js/BehaviorBounce.js\"\n\t],\n\t\"./BehaviorCollide\": [\n\t\t\"./src/js/BehaviorCollide.js\"\n\t],\n\t\"./BehaviorCollide.js\": [\n\t\t\"./src/js/BehaviorCollide.js\"\n\t],\n\t\"./BehaviorEmitter\": [\n\t\t\"./src/js/BehaviorEmitter.js\"\n\t],\n\t\"./BehaviorEmitter.js\": [\n\t\t\"./src/js/BehaviorEmitter.js\"\n\t],\n\t\"./BehaviorEvent\": [\n\t\t\"./src/js/BehaviorEvent.js\"\n\t],\n\t\"./BehaviorEvent.js\": [\n\t\t\"./src/js/BehaviorEvent.js\"\n\t],\n\t\"./BehaviorHand\": [\n\t\t\"./src/js/BehaviorHand.js\",\n\t\t0\n\t],\n\t\"./BehaviorHand.js\": [\n\t\t\"./src/js/BehaviorHand.js\",\n\t\t0\n\t],\n\t\"./BehaviorHeart\": [\n\t\t\"./src/js/BehaviorHeart.js\"\n\t],\n\t\"./BehaviorHeart.js\": [\n\t\t\"./src/js/BehaviorHeart.js\"\n\t],\n\t\"./BehaviorLight\": [\n\t\t\"./src/js/BehaviorLight.js\"\n\t],\n\t\"./BehaviorLight.js\": [\n\t\t\"./src/js/BehaviorLight.js\"\n\t],\n\t\"./BehaviorMesh\": [\n\t\t\"./src/js/BehaviorMesh.js\"\n\t],\n\t\"./BehaviorMesh.js\": [\n\t\t\"./src/js/BehaviorMesh.js\"\n\t],\n\t\"./BehaviorOrbit\": [\n\t\t\"./src/js/BehaviorOrbit.js\"\n\t],\n\t\"./BehaviorOrbit.js\": [\n\t\t\"./src/js/BehaviorOrbit.js\"\n\t],\n\t\"./BehaviorParticles\": [\n\t\t\"./src/js/BehaviorParticles.js\"\n\t],\n\t\"./BehaviorParticles.js\": [\n\t\t\"./src/js/BehaviorParticles.js\"\n\t],\n\t\"./BehaviorPhysics\": [\n\t\t\"./src/js/BehaviorPhysics.js\"\n\t],\n\t\"./BehaviorPhysics.js\": [\n\t\t\"./src/js/BehaviorPhysics.js\"\n\t],\n\t\"./BehaviorProton\": [\n\t\t\"./src/js/BehaviorProton.js\"\n\t],\n\t\"./BehaviorProton.js\": [\n\t\t\"./src/js/BehaviorProton.js\"\n\t],\n\t\"./BehaviorRenderer\": [\n\t\t\"./src/js/BehaviorRenderer.js\"\n\t],\n\t\"./BehaviorRenderer.js\": [\n\t\t\"./src/js/BehaviorRenderer.js\"\n\t],\n\t\"./BehaviorSky\": [\n\t\t\"./src/js/BehaviorSky.js\"\n\t],\n\t\"./BehaviorSky.js\": [\n\t\t\"./src/js/BehaviorSky.js\"\n\t],\n\t\"./BehaviorText\": [\n\t\t\"./src/js/BehaviorText.js\"\n\t],\n\t\"./BehaviorText.js\": [\n\t\t\"./src/js/BehaviorText.js\"\n\t],\n\t\"./BehaviorTextPanel\": [\n\t\t\"./src/js/BehaviorTextPanel.js\"\n\t],\n\t\"./BehaviorTextPanel.js\": [\n\t\t\"./src/js/BehaviorTextPanel.js\"\n\t],\n\t\"./BehaviorTick\": [\n\t\t\"./src/js/BehaviorTick.js\"\n\t],\n\t\"./BehaviorTick.js\": [\n\t\t\"./src/js/BehaviorTick.js\"\n\t],\n\t\"./BehaviorWalk\": [\n\t\t\"./src/js/BehaviorWalk.js\"\n\t],\n\t\"./BehaviorWalk.js\": [\n\t\t\"./src/js/BehaviorWalk.js\"\n\t],\n\t\"./Blob\": [\n\t\t\"./src/js/Blob.js\"\n\t],\n\t\"./Blob.js\": [\n\t\t\"./src/js/Blob.js\"\n\t]\n};\nfunction webpackAsyncContext(req) {\n\tif(!__webpack_require__.o(map, req)) {\n\t\treturn Promise.resolve().then(function() {\n\t\t\tvar e = new Error(\"Cannot find module '\" + req + \"'\");\n\t\t\te.code = 'MODULE_NOT_FOUND';\n\t\t\tthrow e;\n\t\t});\n\t}\n\n\tvar ids = map[req], id = ids[0];\n\treturn Promise.all(ids.slice(1).map(__webpack_require__.e)).then(function() {\n\t\treturn __webpack_require__(id);\n\t});\n}\nwebpackAsyncContext.keys = function webpackAsyncContextKeys() {\n\treturn Object.keys(map);\n};\nwebpackAsyncContext.id = \"./src/js lazy recursive ^\\\\.\\\\/.*$\";\nmodule.exports = webpackAsyncContext;\n\n//# sourceURL=webpack:///./src/js_lazy_^\\.\\/.*$_namespace_object?");
 
 /***/ }),
 
@@ -321,7 +444,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BehaviorChildren\", function() { return BehaviorChildren; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Blob\", function() { return Blob; });\n/* harmony import */ var _BehaviorRenderer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BehaviorRenderer.js */ \"./src/js/BehaviorRenderer.js\");\n/* harmony import */ var _BehaviorLight_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BehaviorLight.js */ \"./src/js/BehaviorLight.js\");\n/* harmony import */ var _BehaviorMesh_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BehaviorMesh.js */ \"./src/js/BehaviorMesh.js\");\n/* harmony import */ var _BehaviorSky_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BehaviorSky.js */ \"./src/js/BehaviorSky.js\");\n/* harmony import */ var _BehaviorHeart_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BehaviorHeart.js */ \"./src/js/BehaviorHeart.js\");\n/* harmony import */ var _BehaviorText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BehaviorText.js */ \"./src/js/BehaviorText.js\");\n/* harmony import */ var _BehaviorTextPanel_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BehaviorTextPanel.js */ \"./src/js/BehaviorTextPanel.js\");\n/* harmony import */ var _BehaviorOrbit_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BehaviorOrbit.js */ \"./src/js/BehaviorOrbit.js\");\n/* harmony import */ var _BehaviorWalk_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BehaviorWalk.js */ \"./src/js/BehaviorWalk.js\");\n/* harmony import */ var _BehaviorBounce_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./BehaviorBounce.js */ \"./src/js/BehaviorBounce.js\");\n/* harmony import */ var _BehaviorParticles_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./BehaviorParticles.js */ \"./src/js/BehaviorParticles.js\");\n/* harmony import */ var _BehaviorProton_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./BehaviorProton.js */ \"./src/js/BehaviorProton.js\");\n/* harmony import */ var _BehaviorEmitter_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./BehaviorEmitter.js */ \"./src/js/BehaviorEmitter.js\");\n/* harmony import */ var _BehaviorPhysics_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./BehaviorPhysics.js */ \"./src/js/BehaviorPhysics.js\");\n/* harmony import */ var _BehaviorEvent_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./BehaviorEvent.js */ \"./src/js/BehaviorEvent.js\");\n/* harmony import */ var _BehaviorTick_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./BehaviorTick.js */ \"./src/js/BehaviorTick.js\");\n/* harmony import */ var _BehaviorCollide_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./BehaviorCollide.js */ \"./src/js/BehaviorCollide.js\");\n// Problem: This way of loading classes isn't available at the time of calling the Blob class:\n// Import to make available to the bundle:\n// Basic\n\n\n\n\n\n// Some fancy objects\n\n\n\n\n\n// Motion models for player\n\n\n\n// Some simple behaviors\n\n\n\n\n\n// Physics\n\n\n// Event handling\n\n\n\n\n///\n/// BlobChildren - a behavior similar to the above but supports nested children\n///\n\nlet UUID = 0\n\nclass BehaviorChildren {\n\tconstructor(props=0,blob=0) {\n\t\tthis._load_children(props,blob)\n\t}\n\t_load_children(props,blob) {\n\t\tif(!props || !blob) {\n\t\t\tconsole.error(\"Children must be attached to a parent\")\n\t\t\treturn\n\t\t}\n\t\tblob.children = this // slight hack, this would normally be set when the constructor returns, set it early so that find() works earlier\n\t\tthis.children = []\n\t\tfor(let i = 0; i < props.length; i++) {\n\t\t\tthis._load_child(props[i],blob)\n\t\t}\n\t}\n\n\t_load_child(details,blob) {\n\t\tlet name = details.name || ++UUID\n\t\tlet child = new Blob(details,blob)\n\t\tchild.name = name\n\t\tconsole.log(\"BlobChildren: adding child named \" + name )\n\t\tthis.children.push(child)\n\t\tblob._speak({ name:\"child_added\", child:child, parent:blob })\n\t}\n\n\tfind(name) {\n\t\tfor(let i = 0; i < this.children.length; i++) {\n\t\t\tif(this.children[i].name == name) return this.children[i]\n\t\t}\n\t\treturn 0\n\t}\n\ttick(interval=0.01) {\n\t\tfor(let i = 0; i < this.children.length; i++) {\n\t\t\tlet blob = this.children[i]\n\t\t\tblob._tick(interval)\n\t\t}\n\t}\n}\n\n///\n/// Blob acts a bucket to hold a collection of named behaviors\n///\n/// Behaviors in a blob have a back reference to the blob\n///\n/// TODO it would be nice to allow multiple instances of a given Behavior in some cases\n/// TODO interval for timing stability at various frame rates\n/// TODO remove having to pass blobs in tick\n///\n\nclass Blob {\n\tconstructor(details=0,parent=0) {\n\t\tconsole.log('building Blob', details, parent, typeof details)\n\t\tthis._details = details // save this so I can regenerate a blob from scratch if desired\n\t\tthis.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO\n\t\tthis.behaviorRegistry = {\n\t\t\t'BehaviorRenderer': './src/js/BehaviorRenderer.js',\n\t\t\t'BehaviorScene': './src/js/BehaviorRenderer.js',\n\t\t\t'BehaviorCamera': './src/js/BehaviorRenderer.js',\n\t\t\t'BehaviorLight': './BehaviorLight.js',\n\t\t\t'BehaviorMesh': './BehaviorMesh.js',\n\t\t\t// Some fancy objects\n\t\t\t'BehaviorSky': './BehaviorSky.js',\n\t\t\t'BehaviorHeart': './BehaviorHeart.js',\n\t\t\t'BehaviorText': './BehaviorText.js',\n\t\t\t'BehaviorTextPanel': './BehaviorTextPanel.js',\n\t\t\t// Motion models for player\n\t\t\t'BehaviorOrbit': './BehaviorOrbit.js',\n\t\t\t'BehaviorWalk': './BehaviorWalk.js',\n\t\t\t// Some simple behaviors\n\t\t\t'BehaviorLine': './BehaviorBounce.js',\n\t\t\t'BehaviorBounce': './BehaviorBounce.js',\n\t\t\t'BehaviorOscillate': './BehaviorBounce.js',\n\t\t\t'BehaviorWander': './BehaviorBounce.js',\n\t\t\t'BehaviorStare': './BehaviorBounce.js',\n\t\t\t'BehaviorParticles': './BehaviorParticles.js',\n\t\t\t'BehaviorProton': './BehaviorProton.js',\n\t\t\t'BehaviorEmitter': './BehaviorEmitter.js',\n\t\t\t// Physics\n\t\t\t'BehaviorPhysics': './BehaviorPhysics.js',\n\t\t\t'BehaviorPhysical': './BehaviorPhysics.js',\n\t\t\t// Event handling\n\t\t\t'BehaviorEvent': './BehaviorEvent.js',\n\t\t\t'BehaviorTick': './BehaviorTick.js',\n\t\t\t'BehaviorCollide': './BehaviorCollide.js'\n\t\t};\n\t\ttry {\n\t\t\tif(!details) details = {}\n\t\t\tif(typeof details == 'string') {\n\t\t\t\t// load from a file\n\t\t\t\tthis._load_module(details)\n\t\t\t} else {\n\t\t\t\t// attach behaviors - behaviors are hashed directly into the blob class not as a .behaviors property\n\t\t\t\tthis._attach_behaviors(details)\n\t\t\t}\n\t\t} catch(e){\n\t\t\tconsole.error(e)\n\t\t}\n\t}\n\t_attach_behaviors(_behaviors={}) {\n\t\tconsole.log('b', _behaviors);\n\t\tObject.entries(_behaviors).forEach(([key,value])=>{\n\t\t\t// evaluate each keypair - a keypair is either a name+class behavior, or a name + literal value\n\t\t\tthis._attach_behavior(key,value)\n\t\t})\n\t}\n\t_attach_behavior(name,props) {\n\t\tlet blob = this\n\t\ttry {\n\t\t\t// skip past existing instances of behavior on object\n\t\t\tlet behavior = null\n\t\t\tlet savename = name\n\t\t\tfor(let count = 0;;count++) {\n\t\t\t\tsavename = name + (count ? count : \"\")\n\t\t\t\tbehavior = blob[savename]\n\t\t\t\tif(!behavior) break\n\t\t\t}\n\t\t\t// instance behavior\n\t\t\tif(true) {\n\t\t\t\tlet className = \"Behavior\"+name.charAt(0).toUpperCase() + name.slice(1);\n\t\t\t\tconsole.log(className, this.behaviorRegistry);\n\t\t\t\tlet fileName = this.behaviorRegistry[className];\n\t\t\t\t// find the class\n\t\t\t\tlet scope = this\n\t\t\t\tconsole.log('fn', fileName);\n\t\t\t\t__webpack_require__(\"./src/js lazy recursive\")(fileName).then((module) => {\n\t\t\t\t\tlet keys = Object.keys(module)\n\t\t\t\t\tlet json = module[keys[0]]\n\t\t\t\t\tscope._attach_behaviors(json)\n\t\t\t\t})\n\n\t\t\t\t// let classRef = eval(className)\n\t\t\t\t// // instance a behavior passing it the bucket itself and the properties for the field\n\t\t\t\t// let behavior = new classRef(props,blob)\n\n\n\t\t\t}\n\t\t} catch(e) {\n\t\t\tif(name == \"name\" || name==\"parent\") { // TODO mark out reserved by a search instead\n\t\t\t\tconsole.error(\"Blob: hit a reserved term\")\n\t\t\t} else {\n\t\t\t\tconsole.error(e)\n\t\t\t\tconsole.error(\"Blob::load: did not find class\")\n\t\t\t\t// store the value as a literal if no class contructor found\n\t\t\t\tblob[name] = props\n\t\t\t}\n\t\t}\n\t}\n\t/// listen for events on this blob with a filter - filter is ignored right now, no percolation of events\n\t_listen(filter,listener) {\n\t\tif(!this._listeners) this._listeners = []\n\t\tthis._listeners.push(listener)\n\t}\n\t/// send event to all listeners - no filtering right now\n\t_speak(args) {\n\t\tfor(let i = 0; this._listeners && i < this._listeners.length;i++) {\n\t\t\tlet listener = this._listeners[i]\n\t\t\tlistener(args)\n\t\t}\n\t}\n\t_tick(interval) {\n\t\t// a blob has a collection of properties, some of which may be behaviors\n\t\ttry {\n\t\t\tObject.entries(this).forEach(([key,value])=>{\n\t\t\t\tif(!value.tick) return\n\t\t\t\tvalue.tick(interval,this)\n\t\t\t})\n\t\t} catch(e) {\n\t\t\tconsole.error(e)\n\t\t}\n\t}\n\t_load_module(filename) {\n\t\tconsole.log('filename', filename);\n\t\tlet scope = this\n\t\t__webpack_require__(\"./src/js lazy recursive\")(filename).then((module) => {\n\t\t\tlet keys = Object.keys(module)\n\t\t\tlet json = module[keys[0]]\n\t\t\tscope._attach_behaviors(json)\n\t\t})\n\t}\n\t/// find a child in children - only searches first collection of children - and only if user named it\n\t/// TODO may want a flat global namespace\n\t/// TODO may want to call this _findGlobalByName or something\n\t_findChildByName(name) {\n\t\tif(!this.parent || !this.parent.children) return 0\n\t\treturn this.parent.children.find(name)\n\t}\n\t/// look at children properties and find first one that has a certain attribute\n\t_findByProperty(field) {\n\t\tlet keys = Object.keys(this)\n\t\tfor(let i = 0 ; i < keys.length; i++) {\n\t\t\tlet value = this[keys[i]]\n\t\t\tif(typeof value  === \"object\" && value[field]) {\n\t\t\t\treturn value\n\t\t\t}\n\t\t}\n\t\treturn 0\n\t}\n\t_copy() {\n\t\tif(!this.parent.children) {\n\t\t\tconsole.error(\"Warning: There's no children in this area to attach your new blob to\")\n\t\t\tlet blob = new Blob(this._details,this.parent)\n\t\t\treturn blob\n\t\t} else {\n\t\t\tlet blob = this.parent.children._load_child(this._details,this.parent)\n\t\t}\n\t}\n}\n\n\n//# sourceURL=webpack:///./src/js/Blob.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BehaviorChildren\", function() { return BehaviorChildren; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Blob\", function() { return Blob; });\n/* harmony import */ var _BehaviorRenderer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BehaviorRenderer.js */ \"./src/js/BehaviorRenderer.js\");\n/* harmony import */ var _BehaviorLight_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BehaviorLight.js */ \"./src/js/BehaviorLight.js\");\n/* harmony import */ var _BehaviorMesh_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BehaviorMesh.js */ \"./src/js/BehaviorMesh.js\");\n/* harmony import */ var _BehaviorSky_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BehaviorSky.js */ \"./src/js/BehaviorSky.js\");\n/* harmony import */ var _BehaviorHeart_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BehaviorHeart.js */ \"./src/js/BehaviorHeart.js\");\n/* harmony import */ var _BehaviorText_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BehaviorText.js */ \"./src/js/BehaviorText.js\");\n/* harmony import */ var _BehaviorTextPanel_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BehaviorTextPanel.js */ \"./src/js/BehaviorTextPanel.js\");\n/* harmony import */ var _BehaviorOrbit_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./BehaviorOrbit.js */ \"./src/js/BehaviorOrbit.js\");\n/* harmony import */ var _BehaviorWalk_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./BehaviorWalk.js */ \"./src/js/BehaviorWalk.js\");\n/* harmony import */ var _BehaviorBounce_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./BehaviorBounce.js */ \"./src/js/BehaviorBounce.js\");\n/* harmony import */ var _BehaviorParticles_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./BehaviorParticles.js */ \"./src/js/BehaviorParticles.js\");\n/* harmony import */ var _BehaviorProton_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./BehaviorProton.js */ \"./src/js/BehaviorProton.js\");\n/* harmony import */ var _BehaviorEmitter_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./BehaviorEmitter.js */ \"./src/js/BehaviorEmitter.js\");\n/* harmony import */ var _BehaviorPhysics_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./BehaviorPhysics.js */ \"./src/js/BehaviorPhysics.js\");\n/* harmony import */ var _BehaviorEvent_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./BehaviorEvent.js */ \"./src/js/BehaviorEvent.js\");\n/* harmony import */ var _BehaviorTick_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./BehaviorTick.js */ \"./src/js/BehaviorTick.js\");\n/* harmony import */ var _BehaviorCollide_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./BehaviorCollide.js */ \"./src/js/BehaviorCollide.js\");\n// Problem: This way of loading classes isn't available at the time of calling the Blob class:\n// Import to make available to the bundle:\n// Basic\n\n\n\n\n\n// Some fancy objects\n\n\n\n\n\n// Motion models for player\n\n\n\n// Some simple behaviors\n\n\n\n\n\n// Physics\n\n\n// Event handling\n\n\n\n\n///\n/// BlobChildren - a behavior similar to the above but supports nested children\n///\n\nlet UUID = 0\n\nclass BehaviorChildren {\n\tconstructor(props=0,blob=0) {\n\t\tthis._load_children(props,blob)\n\t}\n\t_load_children(props,blob) {\n\t\tif(!props || !blob) {\n\t\t\tconsole.error(\"Children must be attached to a parent\")\n\t\t\treturn\n\t\t}\n\t\tblob.children = this // slight hack, this would normally be set when the constructor returns, set it early so that find() works earlier\n\t\tthis.children = []\n\t\tfor(let i = 0; i < props.length; i++) {\n\t\t\tthis._load_child(props[i],blob)\n\t\t}\n\t}\n\n\t_load_child(details,blob) {\n\t\tlet name = details.name || ++UUID\n\t\tlet child = new Blob(details,blob)\n\t\tchild.name = name\n\t\tconsole.log(\"BlobChildren: adding child named \" + name )\n\t\tthis.children.push(child)\n\t\tblob._speak({ name:\"child_added\", child:child, parent:blob })\n\t}\n\n\tfind(name) {\n\t\tfor(let i = 0; i < this.children.length; i++) {\n\t\t\tif(this.children[i].name == name) return this.children[i]\n\t\t}\n\t\treturn 0\n\t}\n\ttick(interval=0.01) {\n\t\tfor(let i = 0; i < this.children.length; i++) {\n\t\t\tlet blob = this.children[i]\n\t\t\tblob._tick(interval)\n\t\t}\n\t}\n}\n\n///\n/// Blob acts a bucket to hold a collection of named behaviors\n///\n/// Behaviors in a blob have a back reference to the blob\n///\n/// TODO it would be nice to allow multiple instances of a given Behavior in some cases\n/// TODO interval for timing stability at various frame rates\n/// TODO remove having to pass blobs in tick\n///\n\nclass Blob {\n\tconstructor(details=0,parent=0) {\n\t\tconsole.log('building Blob', details, parent, typeof details)\n\t\tthis._details = details // save this so I can regenerate a blob from scratch if desired\n\t\tthis.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO\n\t\tthis.behaviorRegistry = {\n\t\t\t'BehaviorRenderer': 'BehaviorRenderer.js',\n\t\t\t'BehaviorScene': 'BehaviorRenderer.js',\n\t\t\t'BehaviorCamera': 'BehaviorRenderer.js',\n\t\t\t'BehaviorLight': 'BehaviorLight.js',\n\t\t\t'BehaviorMesh': 'BehaviorMesh.js',\n\t\t\t// Some fancy objects\n\t\t\t'BehaviorSky': 'BehaviorSky.js',\n\t\t\t'BehaviorHeart': 'BehaviorHeart.js',\n\t\t\t'BehaviorText': 'BehaviorText.js',\n\t\t\t'BehaviorTextPanel': 'BehaviorTextPanel.js',\n\t\t\t// Motion models for player\n\t\t\t'BehaviorOrbit': 'BehaviorOrbit.js',\n\t\t\t'BehaviorWalk': 'BehaviorWalk.js',\n\t\t\t// Some simple behaviors\n\t\t\t'BehaviorLine': 'BehaviorBounce.js',\n\t\t\t'BehaviorBounce': 'BehaviorBounce.js',\n\t\t\t'BehaviorOscillate': 'BehaviorBounce.js',\n\t\t\t'BehaviorWander': 'BehaviorBounce.js',\n\t\t\t'BehaviorStare': 'BehaviorBounce.js',\n\t\t\t'BehaviorParticles': 'BehaviorParticles.js',\n\t\t\t'BehaviorProton': 'BehaviorProton.js',\n\t\t\t'BehaviorEmitter': 'BehaviorEmitter.js',\n\t\t\t// Physics\n\t\t\t'BehaviorPhysics': 'BehaviorPhysics.js',\n\t\t\t'BehaviorPhysical': 'BehaviorPhysics.js',\n\t\t\t// Event handling\n\t\t\t'BehaviorEvent': 'BehaviorEvent.js',\n\t\t\t'BehaviorTick': 'BehaviorTick.js',\n\t\t\t'BehaviorCollide': 'BehaviorCollide.js'\n\t\t};\n\t\ttry {\n\t\t\tif(!details) details = {}\n\t\t\tif(typeof details == 'string') {\n\t\t\t\t// load from a file\n\t\t\t\tthis._load_module(details)\n\t\t\t} else {\n\t\t\t\t// attach behaviors - behaviors are hashed directly into the blob class not as a .behaviors property\n\t\t\t\tthis._attach_behaviors(details)\n\t\t\t}\n\t\t} catch(e){\n\t\t\tconsole.error(e)\n\t\t}\n\t}\n\t_attach_behaviors(_behaviors={}) {\n\t\tconsole.log('b', _behaviors);\n\t\tObject.entries(_behaviors).forEach(([key,value])=>{\n\t\t\t// evaluate each keypair - a keypair is either a name+class behavior, or a name + literal value\n\t\t\tthis._attach_behavior(key,value)\n\t\t})\n\t}\n\t_attach_behavior(name,props) {\n\t\tlet blob = this\n\t\ttry {\n\t\t\t// skip past existing instances of behavior on object\n\t\t\tlet behavior = null\n\t\t\tlet savename = name\n\t\t\tfor(let count = 0;;count++) {\n\t\t\t\tsavename = name + (count ? count : \"\")\n\t\t\t\tbehavior = blob[savename]\n\t\t\t\tif(!behavior) break\n\t\t\t}\n\t\t\t// instance behavior\n\t\t\tif(true) {\n\t\t\t\tlet className = \"Behavior\"+name.charAt(0).toUpperCase() + name.slice(1);\n\t\t\t\tlet fileName = this.behaviorRegistry[className];\n\t\t\t\t// find the class\n\t\t\t\tlet scope = this\n\t\t\t\tconsole.log('fn', fileName);\n\t\t\t\tif (fileName !== undefined ) {\n\t\t\t\t\t__webpack_require__(\"./src/js lazy recursive ^\\\\.\\\\/.*$\")(\"./\" + fileName).then((module) => {\n\t\t\t\t\t\tlet keys = Object.keys(module)\n\t\t\t\t\t\tlet json = module[keys[0]]\n\t\t\t\t\t\tconsole.log(module);\n\n\t\t\t\t\t\t// let classRef = eval(className)\n\t\t\t\t\t\t// // instance a behavior passing it the bucket itself and the properties for the field\n\t\t\t\t\t\tlet behavior = new module[className](props,blob)\n\t\t\t\t\t\tscope._attach_behaviors(json)\n\n\t\t\t\t\t})\n\t\t\t\t}\n\n\n\t\t\t}\n\t\t} catch(e) {\n\t\t\tif(name == \"name\" || name==\"parent\") { // TODO mark out reserved by a search instead\n\t\t\t\tconsole.error(\"Blob: hit a reserved term\")\n\t\t\t} else {\n\t\t\t\tconsole.error(e)\n\t\t\t\tconsole.error(\"Blob::load: did not find class\")\n\t\t\t\t// store the value as a literal if no class contructor found\n\t\t\t\tblob[name] = props\n\t\t\t}\n\t\t}\n\t}\n\t/// listen for events on this blob with a filter - filter is ignored right now, no percolation of events\n\t_listen(filter,listener) {\n\t\tif(!this._listeners) this._listeners = []\n\t\tthis._listeners.push(listener)\n\t}\n\t/// send event to all listeners - no filtering right now\n\t_speak(args) {\n\t\tfor(let i = 0; this._listeners && i < this._listeners.length;i++) {\n\t\t\tlet listener = this._listeners[i]\n\t\t\tlistener(args)\n\t\t}\n\t}\n\t_tick(interval) {\n\t\t// a blob has a collection of properties, some of which may be behaviors\n\t\ttry {\n\t\t\tObject.entries(this).forEach(([key,value])=>{\n\t\t\t\tif(!value.tick) return\n\t\t\t\tvalue.tick(interval,this)\n\t\t\t})\n\t\t} catch(e) {\n\t\t\tconsole.error(e)\n\t\t}\n\t}\n\t_load_module(filename) {\n\t\tconsole.log('filename', filename);\n\t\tlet scope = this\n\t\t__webpack_require__(\"./src/js lazy recursive\")(filename).then((module) => {\n\t\t\tlet keys = Object.keys(module)\n\t\t\tlet json = module[keys[0]]\n\t\t\tscope._attach_behaviors(json)\n\t\t})\n\t}\n\t/// find a child in children - only searches first collection of children - and only if user named it\n\t/// TODO may want a flat global namespace\n\t/// TODO may want to call this _findGlobalByName or something\n\t_findChildByName(name) {\n\t\tif(!this.parent || !this.parent.children) return 0\n\t\treturn this.parent.children.find(name)\n\t}\n\t/// look at children properties and find first one that has a certain attribute\n\t_findByProperty(field) {\n\t\tlet keys = Object.keys(this)\n\t\tfor(let i = 0 ; i < keys.length; i++) {\n\t\t\tlet value = this[keys[i]]\n\t\t\tif(typeof value  === \"object\" && value[field]) {\n\t\t\t\treturn value\n\t\t\t}\n\t\t}\n\t\treturn 0\n\t}\n\t_copy() {\n\t\tif(!this.parent.children) {\n\t\t\tconsole.error(\"Warning: There's no children in this area to attach your new blob to\")\n\t\t\tlet blob = new Blob(this._details,this.parent)\n\t\t\treturn blob\n\t\t} else {\n\t\t\tlet blob = this.parent.children._load_child(this._details,this.parent)\n\t\t}\n\t}\n}\n\n\n//# sourceURL=webpack:///./src/js/Blob.js?");
 
 /***/ })
 

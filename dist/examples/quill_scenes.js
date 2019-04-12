@@ -24,7 +24,8 @@ examples.quill_scenes = {
 		{
 			name:"sky",
 			sky:{
-				art:"https://www.dropbox.com/preview/threejsfx_public/quillustrations/skyboxes/handpainted/mountain_sky_equirectangular.png?role=personal"
+				// art:"https://www.dropbox.com/preview/threejsfx_public/quillustrations/skyboxes/handpainted/mountain_sky_equirectangular.png?role=personal"
+				art: "./art/quillustrations/skyboxes/handpainted/mountain_sky_equirectangular.png",
 			}
 		},
 
