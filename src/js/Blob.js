@@ -168,6 +168,7 @@ export class Blob {
 						// let classRef = eval(className)
 						// // instance a behavior passing it the bucket itself and the properties for the field
 						let behavior = new module[className](props,blob)
+						console.log(behavior);
 						scope._attach_behaviors(json)
 
 					})
