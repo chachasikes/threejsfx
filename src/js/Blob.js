@@ -1,4 +1,5 @@
-
+// Problem: This way of loading classes isn't available at the time of calling the Blob class:
+// Import to make available to the bundle:
 // Basic
 import {BehaviorRenderer, BehaviorScene, BehaviorCamera} from './BehaviorRenderer.js'
 
@@ -28,7 +29,6 @@ import {BehaviorPhysics, BehaviorPhysical} from './BehaviorPhysics.js'
 import {BehaviorEvent} from './BehaviorEvent.js'
 import {BehaviorTick} from './BehaviorTick.js'
 import {BehaviorCollide} from './BehaviorCollide.js'
-
 
 ///
 /// BlobChildren - a behavior similar to the above but supports nested children
@@ -87,8 +87,40 @@ export class BehaviorChildren {
 
 export class Blob {
 	constructor(details=0,parent=0) {
+		console.log('building Blob', details, parent, typeof details)
 		this._details = details // save this so I can regenerate a blob from scratch if desired
 		this.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO
+		this.behaviorRegistry = {
+			'BehaviorRenderer': './src/js/BehaviorRenderer.js',
+			'BehaviorScene': './src/js/BehaviorRenderer.js',
+			'BehaviorCamera': './src/js/BehaviorRenderer.js',
+			'BehaviorLight': './BehaviorLight.js',
+			'BehaviorMesh': './BehaviorMesh.js',
+			// Some fancy objects
+			'BehaviorSky': './BehaviorSky.js',
+			'BehaviorHeart': './BehaviorHeart.js',
+			'BehaviorText': './BehaviorText.js',
+			'BehaviorTextPanel': './BehaviorTextPanel.js',
+			// Motion models for player
+			'BehaviorOrbit': './BehaviorOrbit.js',
+			'BehaviorWalk': './BehaviorWalk.js',
+			// Some simple behaviors
+			'BehaviorLine': './BehaviorBounce.js',
+			'BehaviorBounce': './BehaviorBounce.js',
+			'BehaviorOscillate': './BehaviorBounce.js',
+			'BehaviorWander': './BehaviorBounce.js',
+			'BehaviorStare': './BehaviorBounce.js',
+			'BehaviorParticles': './BehaviorParticles.js',
+			'BehaviorProton': './BehaviorProton.js',
+			'BehaviorEmitter': './BehaviorEmitter.js',
+			// Physics
+			'BehaviorPhysics': './BehaviorPhysics.js',
+			'BehaviorPhysical': './BehaviorPhysics.js',
+			// Event handling
+			'BehaviorEvent': './BehaviorEvent.js',
+			'BehaviorTick': './BehaviorTick.js',
+			'BehaviorCollide': './BehaviorCollide.js'
+		};
 		try {
 			if(!details) details = {}
 			if(typeof details == 'string') {
@@ -103,6 +135,7 @@ export class Blob {
 		}
 	}
 	_attach_behaviors(_behaviors={}) {
+		console.log('b', _behaviors);
 		Object.entries(_behaviors).forEach(([key,value])=>{
 			// evaluate each keypair - a keypair is either a name+class behavior, or a name + literal value
 			this._attach_behavior(key,value)
@@ -121,36 +154,30 @@ export class Blob {
 			}
 			// instance behavior
 			if(true) {
-				let className = "Behavior"+name.charAt(0).toUpperCase() + name.slice(1)
+				let className = "Behavior"+name.charAt(0).toUpperCase() + name.slice(1);
+				console.log(className, this.behaviorRegistry);
+				let fileName = this.behaviorRegistry[className];
 				// find the class
-				let classRef = eval(className)
-				// instance a behavior passing it the bucket itself and the properties for the field
-				let behavior = new classRef(props,blob)
+				let scope = this
+				console.log('fn', fileName);
+				import(fileName).then((module) => {
+					let keys = Object.keys(module)
+					let json = module[keys[0]]
+					scope._attach_behaviors(json)
+				})
 
-				// let libs = {}
-				// function init(constructorName) {
-				// 	libs[constructorName] = function () { return this}
-				// 	return libs
-				// }
-				// init(constructorName)
-				//
+				// let classRef = eval(className)
 				// // instance a behavior passing it the bucket itself and the properties for the field
-				// let behavior = new libs[constructorName](props,blob)
+				// let behavior = new classRef(props,blob)
 
 
-				// in each new behavior - keep a reference to this bucket
-				behavior.blob = blob
-				// in this instance - append new behavior to list of behaviors associated with this bucket
-				blob[savename] = behavior
-				console.log("Blob: added new instance of behavior " + savename + " " + className )
-				blob._speak({name:"behavior_added",behavior:behavior,parent:blob})
 			}
 		} catch(e) {
 			if(name == "name" || name=="parent") { // TODO mark out reserved by a search instead
-				//console.error("Blob: hit a reserved term : " + key + "=" + props)
+				console.error("Blob: hit a reserved term")
 			} else {
 				console.error(e)
-				// console.error("Blob::load: did not find " + className + " for " + name)
+				console.error("Blob::load: did not find class")
 				// store the value as a literal if no class contructor found
 				blob[name] = props
 			}
@@ -180,6 +207,7 @@ export class Blob {
 		}
 	}
 	_load_module(filename) {
+		console.log('filename', filename);
 		let scope = this
 		import(filename).then((module) => {
 			let keys = Object.keys(module)

@@ -2,6 +2,7 @@ const path = require('path');
 const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin');
 
 module.exports = {
+  mode: 'development',
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -21,7 +22,7 @@ module.exports = {
         test: /\.tsx?$/,
         use: 'ts-loader',
         exclude: /node_modules/
-      }
+      },
     ]
   },
   plugins: [

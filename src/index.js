@@ -1,4 +1,4 @@
-import {Blob} from "./js/Blob.js"
+import {Blob} from "./js/Blob.js";
 
 window.onload = (blarg) => {
 	let blob = 0

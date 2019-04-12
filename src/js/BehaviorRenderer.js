@@ -85,7 +85,6 @@ export class BehaviorScene extends THREE.Scene {
 		blob._listen("child_added behavior scene",this.on_child_added.bind(this))
 		// add renderer by hand
 		this.renderer = blob.renderer = new BehaviorRenderer({},blob)
-		console.log(this.renderer,'r');
 		// add a default camera by hand - can be overridden
 		this.camera = blob.camera = new BehaviorCamera({},blob)
 		// set renderer to use this scene and default camera for now
