@@ -2,15 +2,30 @@
   "name": "threejsfx",
   "version": "1.0.1",
   "description": "an effects library with a component document model",
-  "main": "needs_a_server.js",
+  "private": true,
   "scripts": {
-    "start": "http-server -c 0"
+    "start": "http-server -c 0",
+    "sync": "webpack;http-server -c 0&&browser-sync start --server --files 'src/*'",
+    "build": "webpack --mode production",
+    "postpack": ""
   },
   "author": "me",
   "license": "BSD",
   "devDependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0",
+    "@huth/utils": "^1.0.1",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "mini-css-extract-plugin": "^0.4.2",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "webpack-bundle-analyzer": "^2.13.1"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
