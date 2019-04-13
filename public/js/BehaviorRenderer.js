@@ -10,18 +10,11 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 		this.scene = 0
 		this.camera = 0
 		this.pov = 0
-		console.log(blox,'blox')
 		this.element = blox.element
 
 		this.PASSTHROUGH = XRSupport.supportsARKit()
 		if(!this.PASSTHROUGH) {
-			console.log(this.element,'elll')
-			if (this.element === "body") {
-				document.body.appendChild( this.domElement )
-			} else {
-				document.querySelector(this.element).appendChild( this.domElement )
-			}
-
+			document.querySelector(this.element).appendChild( this.domElement )
 			this.setAnimationLoop( this.render3.bind(this) )
 		} else {
 			this.xr = new XRSupport({
