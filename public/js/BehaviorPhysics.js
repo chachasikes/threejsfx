@@ -27,7 +27,6 @@ export class BehaviorPhysics {
 		physicsInstance = this
 
 		Ammo()
-		console.log("XXXX")
 
 		this.collisionConfiguration  = new Ammo.btDefaultCollisionConfiguration()
 		this.dispatcher              = new Ammo.btCollisionDispatcher(this.collisionConfiguration)
@@ -312,4 +311,3 @@ https://github.com/kripken/ammo.js/blox/master/examples/webgl_demo_terrain/index
 				}
 
 */
-

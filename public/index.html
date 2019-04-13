@@ -72,15 +72,11 @@ import { importModule } from "./lib/importModule.js";
     const moduleSpecifier = "./js/Blob.js"
     const module = await importModule(moduleSpecifier)
 		window.Blob = module.Blob
-		// console.log("Blob loaded", module, window.Blob)
-		// var event = new Event('loadBlob')
-		// document.body.dispatchEvent(event)
-		let blob = new Blob('quill_scenes', null, 'blob')
+		var event = new Event('loadBlob')
+		document.body.dispatchEvent(event)
   })();
 </script>
-<!-- <script>
-
-
+<script>
 AFRAME.registerComponent('quill', {
 	schema: {
 		event: {type: 'string', default: ''},
@@ -91,7 +87,6 @@ AFRAME.registerComponent('quill', {
 		this.eventHandlerFn = function () { console.log(self.data.message); };
 	},
 	update: function (oldData) {
-		console.log("UPDATE")
 		var data = this.data;
 		var el = this.el;
 
@@ -110,7 +105,6 @@ AFRAME.registerComponent('quill', {
 			console.log('entity blox', window.Blob, data)
 			let Blob = window.Blob;
 			let blob = new Blob('quill_scenes', el)
-			console.log(blob)
 		} catch(e) {
 			console.log(e)
 		}
@@ -123,11 +117,11 @@ document.body.addEventListener('loadBlob', function (e) {
 	el.setAttribute('quill', {event: 'anEvent', message: 'Hello, new event! 3'});
 	el.emit('anEvent');
 }, false);
-</script> -->
+</script>
 
-<!-- <a-scene>
+<a-scene>
 	 <a-entity quill="event: anEvent; message: Hello, Metaverse!"></a-entity>
-</a-scene> -->
+</a-scene>
 
 <div id="blob"></div>
 </body>
