@@ -65,9 +65,9 @@ A collection of effects and a declarative grammar. See <a href="https://github.c
 	(async () => {
     const moduleSpecifier = "./js/Blob.js"
     const module = await import(moduleSpecifier)
-		window.Blox = module.Blox
-		console.log("Blox loaded", module, window.Blox)
-		var event = new Event('loadBlox')
+		window.Blob = module.Blob
+		console.log("Blob loaded", module, window.Blob)
+		var event = new Event('loadBlob')
 		document.body.dispatchEvent(event)
   })();
 </script>
@@ -100,17 +100,19 @@ AFRAME.registerComponent('quill', {
 		}
 		console.log('Quill initialized')
 		try {
-			console.log('entity blox', window.Blox, data)
+			console.log('entity blox', window.Blob, data)
+			let Blob = window.Blob;
+			let blob = new Blob('quill_scenes', el)
+			console.log(blob)
 		} catch(e) {
 			console.log(e)
 		}
 	}
 });
 
-document.body.addEventListener('loadBlox', function (e) {
-	console.log("dispatch loaded", window.Blox)
+document.body.addEventListener('loadBlob', function (e) {
+	// console.log("dispatch loaded", window.Blob)
 	var el = document.querySelector('a-entity');
-
 	el.setAttribute('quill', {event: 'anEvent', message: 'Hello, new event! 3'});
 	el.emit('anEvent');
 }, false);

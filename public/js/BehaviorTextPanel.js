@@ -2,12 +2,12 @@
 import {BehaviorMesh} from './BehaviorMesh.js'
 
 export class BehaviorTextPanel extends BehaviorMesh {
-	constructor(props,blox) {
+	constructor(props,blox,element="body") {
 		props.art = "sphere" // temporary
 		super(props,blox)
 		this.props = props
 
-		let material = this.makeMaterial(props.say || "hello")
+		let material = this.makeMaterial(props.say || "hello", element)
 		let geometry = this.makeGeometry(1,1)
 
 		if(this.material) this.material.dispose()
@@ -22,7 +22,7 @@ export class BehaviorTextPanel extends BehaviorMesh {
 		return new THREE.PlaneGeometry(w,h,10,10)
 	}
 
-	makeMaterial(prettywords) {
+	makeMaterial(prettywords,element) {
 
 		// Add a nice round rectangle feature
 
@@ -95,7 +95,7 @@ export class BehaviorTextPanel extends BehaviorMesh {
 		// a scratch canvas
 		// TODO caller needs to be able to set various params here
 
-		let scratch = document.createElement("canvas")
+		let scratch = document[element].createElement("canvas")
 		scratch.width = w
 		scratch.height = h
 		let context = scratch.getContext("2d")

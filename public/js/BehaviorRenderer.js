@@ -1,7 +1,7 @@
 
 
 export class BehaviorRenderer extends THREE.WebGLRenderer {
-	constructor(props,blox) {
+	constructor(props,blox,element="body") {
 		super({antialias:true,alpha:XRSupport.supportsARKit()})
 		this.setSize( window.innerWidth, window.innerHeight )
 		this.props = props
@@ -13,7 +13,7 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 
 		this.PASSTHROUGH = XRSupport.supportsARKit()
 		if(!this.PASSTHROUGH) {
-			document.body.appendChild( this.domElement )
+			document[element].appendChild( this.domElement )
 			this.setAnimationLoop( this.render3.bind(this) )
 		} else {
 			this.xr = new XRSupport({
@@ -50,7 +50,7 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 
 	renderScene() {
 		if(!this.scene || !this.camera) return
-		this.render(this.scene,this.camera)			
+		this.render(this.scene,this.camera)
 	}
 
 	render3() {
@@ -110,4 +110,3 @@ export class BehaviorScene extends THREE.Scene {
 		})
 	}
 }
-
