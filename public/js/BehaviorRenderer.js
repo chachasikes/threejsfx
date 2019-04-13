@@ -10,10 +10,16 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 		this.scene = 0
 		this.camera = 0
 		this.pov = 0
+		this.element = blob.element
 
 		this.PASSTHROUGH = XRSupport.supportsARKit()
 		if(!this.PASSTHROUGH) {
-			document[element].appendChild( this.domElement )
+			if (this.element === "body") {
+				document.body.appendChild( this.domElement )
+			} else {
+				document.getElementById(this.element).appendChild( this.domElement )
+			}
+
 			this.setAnimationLoop( this.render3.bind(this) )
 		} else {
 			this.xr = new XRSupport({
@@ -80,7 +86,7 @@ export class BehaviorCamera extends THREE.PerspectiveCamera {
 }
 
 export class BehaviorScene extends THREE.Scene {
-	constructor(props,blox) {
+	constructor(props,blox,element) {
 		super()
 		// force add a renderer by hand if not added
 		if(!blox.renderer) {

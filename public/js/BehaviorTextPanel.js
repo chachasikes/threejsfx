@@ -95,7 +95,7 @@ export class BehaviorTextPanel extends BehaviorMesh {
 		// a scratch canvas
 		// TODO caller needs to be able to set various params here
 
-		let scratch = document[element].createElement("canvas")
+		let scratch = document.getElementById(element).createElement("canvas")
 		scratch.width = w
 		scratch.height = h
 		let context = scratch.getContext("2d")

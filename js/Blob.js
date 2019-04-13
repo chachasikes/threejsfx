@@ -48,6 +48,7 @@ let UUID = 0
 
 export class BehaviorChildren {
 	constructor(props=0,blob=0,element="body") {
+		console.log('bc',element)
 		this._load_children(props,blob,element)
 	}
 	_load_children(props,blob,element) {
@@ -57,14 +58,15 @@ export class BehaviorChildren {
 		}
 		blob.children = this // slight hack, this would normally be set when the constructor returns, set it early so that find() works earlier
 		this.children = []
+		console.log('children',element)
 		for(let i = 0; i < props.length; i++) {
-			this._load_child(props[i],blob)
+			this._load_child(props[i],blob,element)
 		}
 	}
 
 	_load_child(details,blob,element) {
 		let name = details.name || ++UUID
-		let child = new Blob(details,blob)
+		let child = new Blob(details,blob,element)
 		child.name = name
 		console.log("BlobChildren: adding child named " + name )
 		this.children.push(child)
@@ -98,6 +100,7 @@ export class BehaviorChildren {
 export class Blob {
 	constructor(details=0,parent=0,element="body") {
 		console.log("Loading Blob", details, element)
+		console.log('b1',element)
 		this._details = details // save this so I can regenerate a blob from scratch if desired
 		this.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO
 		this.element = element
@@ -116,7 +119,8 @@ export class Blob {
 		}
 	}
 	_attach_behaviors(_behaviors={},element="body") {
-		Object.entries(_behaviors).forEach(([key,value])=>{
+		console.log('attach',element)
+		Object.entries(_behaviors).forEach(([key,value,])=>{
 			// evaluate each keypair - a keypair is either a name+class behavior, or a name + literal value
 			console.log("behaviors", key, value, element)
 			this._attach_behavior(key,value,element)
@@ -210,7 +214,7 @@ export class Blob {
 	_copy() {
 		if(!this.parent.children) {
 			console.error("Warning: There's no children in this area to attach your new blob to")
-			let blob = new Blob(this._details,this.parent)
+			let blob = new Blob(this._details,this.parent,this.element)
 			return blob
 		} else {
 			let blob = this.parent.children._load_child(this._details,this.parent, this.element)
