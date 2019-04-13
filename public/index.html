@@ -11,8 +11,8 @@
 body { margin: 0; }
 canvas { width: 100%; height: 100% }
 </style>
-<!-- <script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script> -->
-<script src="lib/three.js"></script>
+<script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+<!-- <script src="lib/three.js"></script> -->
 <script src="lib/OrbitControls.js"></script>
 <script src="lib/hilbert3D.js"></script>
 <script src="lib/WebGL.js"></script>
@@ -42,13 +42,13 @@ span {
 	margin:4px;
 	border-radius:7px;
 }
-.blob {
+.blox {
 	margin: 10px;
 }
 </style>
 </head>
 <body>
-<div "commentary">
+<!-- <div "commentary">
 <h1>BLOX Examples</h1>
 See <a href="https://github.com/anselm/blox">github.com/anselm/blox</a>
 <h1>Examples</h1>
@@ -62,40 +62,38 @@ See <a href="https://github.com/anselm/blox">github.com/anselm/blox</a>
 <a href="#cherry_blossoms.js"><span>Crude Particle Effects - Cherry Blossoms</span></a>
 <a href="#proximity_events.js"><span>Simple Collisions - Fox in Field</span></a>
 <a href="#quill_scenes.js"><span>Quill illustration in hand painted skybox</span></a>
-<!-- <a href="#animatic.js"><span>Animatic</span></a> -->
-</div>
-
-<script type=module>
-// TODO turns out firefox doesn't support dynamic imports
-import {Blox} from "./js/Blox.js"
-window.onload = (blarg) => {
-	let blox = 0
-	function gotohash() {
-		if(blox) document.body.removeChild(blox.renderer.domElement) // HACK
-		let hash = window.location.hash.substr(1)
-		if(!hash || !hash.length) return
-		let file = "../examples/"+hash
-		blox = new Blox(file)
-		blox.element = "#blox"
-	}
-	window.addEventListener("hashchange", gotohash)
-	gotohash()
-}
-</script>
-
+</div> -->
 
 <!-- This executes as soon as its imports have fetched -->
-<!-- <script type=module>
-import { importModule } from "./lib/importModule.js";
+<script type=module>
+// TODO turns out firefox doesn't support dynamic imports
+import {importModule} from './lib/importModule.js'
+
 	(async () => {
     const moduleSpecifier = "./js/Blox.js"
     const module = await importModule(moduleSpecifier)
+
+		// window.onload = (blarg) => {
+		// 	let blox = 0
+		// 	function gotohash() {
+		// 		if(blox) document.body.removeChild(blox.renderer.domElement) // HACK
+		// 		let hash = window.location.hash.substr(1)
+		// 		if(!hash || !hash.length) return
+		// 		let file = "../examples/"+hash
+		// 		blox = new Blox(file)
+		// 		window.Blox = blox
+		// 	}
+		// 	window.addEventListener("hashchange", gotohash)
+		// 	gotohash()
+		// }
+
+		module.Blox.element = "#blox"
 		window.Blox = module.Blox
 		var event = new Event('loadBlox')
 		document.body.dispatchEvent(event)
   })();
-</script> -->
-<!-- <script>
+</script>
+<script>
 AFRAME.registerComponent('quill', {
 	schema: {
 		event: {type: 'string', default: ''},
@@ -123,9 +121,10 @@ AFRAME.registerComponent('quill', {
 		try {
 			console.log('entity blox', window.Blox, data)
 			let Blox = window.Blox;
-			let blobElement = document.querySelector('a-entity[quill]');
-			console.log(blobElement);
-			let blob = new Blox('quill_scenes', blobElement)
+			let bloxElement = document.querySelector('a-entity[quill]');
+			console.log(bloxElement);
+			let blox = new Blox('./examples/quill_scenes.js')
+			blox.element = 'a-entity[blox]'
 		} catch(e) {
 			console.log(e)
 		}
@@ -134,16 +133,16 @@ AFRAME.registerComponent('quill', {
 
 document.body.addEventListener('loadBlox', function (e) {
 	// console.log("dispatch loaded", window.Blox)
-	var el = document.querySelector('a-entity');
+	var el = document.querySelector('a-entity[blox]');
 	el.setAttribute('quill', {event: 'anEvent', message: 'Hello, new event! 3'});
 	el.emit('anEvent');
 }, false);
-</script> -->
+</script>
 
-<!-- <a-scene>
-	 <a-entity blob="event: anEvent; message: Hello, Metaverse!"></a-entity>
-</a-scene> -->
+<a-scene>
+	 <a-entity blox="event: anEvent; message: Hello, Metaverse!"></a-entity>
+</a-scene>
 
-<div id="blox"></div>
+<!-- <div id="blox"></div> -->
 </body>
 </html>
