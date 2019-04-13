@@ -66,12 +66,13 @@ A collection of effects and a declarative grammar. See <a href="https://github.c
     const moduleSpecifier = "./js/Blob.js"
     const module = await import(moduleSpecifier)
 		window.Blob = module.Blob
-		console.log("Blob loaded", module, window.Blob)
-		var event = new Event('loadBlob')
-		document.body.dispatchEvent(event)
+		// console.log("Blob loaded", module, window.Blob)
+		// var event = new Event('loadBlob')
+		// document.body.dispatchEvent(event)
+		let blob = new Blob('quill_scenes', 'blob')
   })();
 </script>
-<script>
+<!-- <script>
 
 
 AFRAME.registerComponent('quill', {
@@ -116,10 +117,12 @@ document.body.addEventListener('loadBlob', function (e) {
 	el.setAttribute('quill', {event: 'anEvent', message: 'Hello, new event! 3'});
 	el.emit('anEvent');
 }, false);
-</script>
+</script> -->
 
-<a-scene>
+<!-- <a-scene>
 	 <a-entity quill="event: anEvent; message: Hello, Metaverse!"></a-entity>
-</a-scene>
+</a-scene> -->
+
+<div id="blob"></div>
 </body>
 </html>
