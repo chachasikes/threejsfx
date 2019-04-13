@@ -47,10 +47,10 @@ import * as quill_scenes from './../examples/quill_scenes.js';
 let UUID = 0
 
 export class BehaviorChildren {
-	constructor(props=0,blob=0) {
-		this._load_children(props,blob)
+	constructor(props=0,blob=0,element="body") {
+		this._load_children(props,blob,element)
 	}
-	_load_children(props,blob) {
+	_load_children(props,blob,element) {
 		if(!props || !blob) {
 			console.error("Children must be attached to a parent")
 			return
@@ -62,7 +62,7 @@ export class BehaviorChildren {
 		}
 	}
 
-	_load_child(details,blob) {
+	_load_child(details,blob,element) {
 		let name = details.name || ++UUID
 		let child = new Blob(details,blob)
 		child.name = name
@@ -97,9 +97,10 @@ export class BehaviorChildren {
 
 export class Blob {
 	constructor(details=0,parent=0,element="body") {
-		console.log("Loading Blob", details)
+		console.log("Loading Blob", details, element)
 		this._details = details // save this so I can regenerate a blob from scratch if desired
 		this.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO
+		this.element = element
 		try {
 			if(!details) details = {}
 			if(typeof details == 'string') {
@@ -114,14 +115,14 @@ export class Blob {
 			console.error(e)
 		}
 	}
-	_attach_behaviors(_behaviors={},element) {
+	_attach_behaviors(_behaviors={},element="body") {
 		Object.entries(_behaviors).forEach(([key,value])=>{
 			// evaluate each keypair - a keypair is either a name+class behavior, or a name + literal value
-			console.log(key, value, element)
+			console.log("behaviors", key, value, element)
 			this._attach_behavior(key,value,element)
 		})
 	}
-	_attach_behavior(name,props) {
+	_attach_behavior(name,props,element) {
 		let blob = this
 		try {
 			// skip past existing instances of behavior on object
@@ -138,7 +139,7 @@ export class Blob {
 				// find the class
 				let classRef = eval(className)
 				// instance a behavior passing it the bucket itself and the properties for the field
-				let behavior = new classRef(props,blob)
+				let behavior = new classRef(props,blob,element)
 				// in each new behavior - keep a reference to this bucket
 				behavior.blob = blob
 				// in this instance - append new behavior to list of behaviors associated with this bucket
@@ -173,7 +174,7 @@ export class Blob {
 		// a blob has a collection of properties, some of which may be behaviors
 		try {
 			Object.entries(this).forEach(([key,value])=>{
-				if(!value.tick) return
+				if(!value || !value.tick) return
 				value.tick(interval,this)
 			})
 		} catch(e) {
@@ -181,12 +182,12 @@ export class Blob {
 		}
 	}
 
-	_load_module(example) {
+	_load_module(example,element) {
 		let scope = this
 		let exampleModule = eval(example)
 		let keys = Object.keys(exampleModule)
 		let json = exampleModule[keys[0]]
-		scope._attach_behaviors(json)
+		scope._attach_behaviors(json, element)
 	}
 	/// find a child in children - only searches first collection of children - and only if user named it
 	/// TODO may want a flat global namespace
@@ -212,7 +213,7 @@ export class Blob {
 			let blob = new Blob(this._details,this.parent)
 			return blob
 		} else {
-			let blob = this.parent.children._load_child(this._details,this.parent)
+			let blob = this.parent.children._load_child(this._details,this.parent, this.element)
 		}
 	}
 }

@@ -27,6 +27,7 @@ canvas { width: 100%; height: 100% }
 <script src="lib/ammo.js"></script>
 <script src="lib/XRSupport.js"></script>
 <script src="lib/three.proton.js"></script>
+<script src="lib/importModule.js"></script>
 <style>
 
 h1 { font-family: Verdana, Geneva, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Verdana, Geneva, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Verdana, Geneva, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
@@ -40,6 +41,9 @@ span {
 	 padding:4px;
 	 margin:4px;
 	 border-radius:7px;
+}
+.blob {
+	margin: 10px;
 }
 </style>
 </head>
@@ -62,14 +66,16 @@ A collection of effects and a declarative grammar. See <a href="https://github.c
 
 <!-- This executes as soon as its imports have fetched -->
 <script async type=module>
+import { importModule } from "./lib/importModule.js";
+
 	(async () => {
     const moduleSpecifier = "./js/Blob.js"
-    const module = await import(moduleSpecifier)
+    const module = await importModule(moduleSpecifier)
 		window.Blob = module.Blob
 		// console.log("Blob loaded", module, window.Blob)
 		// var event = new Event('loadBlob')
 		// document.body.dispatchEvent(event)
-		let blob = new Blob('quill_scenes', 'blob')
+		let blob = new Blob('quill_scenes', null, 'blob')
   })();
 </script>
 <!-- <script>
