@@ -95,8 +95,9 @@ export class BehaviorChildren {
 /// TODO remove having to pass blobs in tick
 ///
 
-export class Blob {
-	constructor(details=0,parent=0) {
+export class Blox {
+	constructor(details=0,parent=0,element) {
+		console.log("Loading Blob", details)
 		this._details = details // save this so I can regenerate a blob from scratch if desired
 		this.parent = parent // parent is reserved - I wonder if I should switch this to use an _ to avoid polluting userland? TODO
 		try {
