@@ -57,7 +57,7 @@ export class Blox {
 	/// description = a JSON hash of behaviors OR a string of a filename to load
 	/// parent = a parent blox if any
 	///
-	constructor(description={},parent=0) {
+	constructor(description={},parent=0,element="body") {
 		// grant a default name that can be rewritten during construction
 		this.name = "blox" + UUID++
 		// save details so that the blox can be cloned on demand
@@ -68,6 +68,7 @@ export class Blox {
 		this.functions = {}
 		// behaviors are hashed here AND currently attached directly as properties for user convenience
 		this.behaviors = {}
+		this.element = element
 		// inhale behaviors
 		try {
 			if(typeof description == 'string') {
@@ -224,7 +225,7 @@ export class Blox {
 		// set the blox to current scope regardless of what it was
 		args.blox = this
 
-		// go out of our way to call any user supplied property that matches this - except don't call ourseeeelllvvvvveessss 
+		// go out of our way to call any user supplied property that matches this - except don't call ourseeeelllvvvvveessss
 		if(args.name != "on_event" && this.functions[args.name]) {
 			this.functions[args.name](args)
 		}
@@ -242,7 +243,7 @@ export class Blox {
 				}
 			} catch(e) {
 				console.error("error handling event")
-				console.error(e)				
+				console.error(e)
 			}
 		})
 	}
@@ -270,7 +271,7 @@ export class BehaviorGroup {
 		}
 		if(array.constructor != Array) {
 			console.error("Error: args must be an array")
-			return			
+			return
 		}
 		// hack; normally these fields are set after but I set it early so that children can rely on group.blox.query()
 		this.blox = blox
@@ -286,7 +287,7 @@ export class BehaviorGroup {
 	///
 	/// Manufacture a new blox from a description
 	///
-	/// description = a json HASH describing a set of behaviors OR a string indicating a document to load 
+	/// description = a json HASH describing a set of behaviors OR a string indicating a document to load
 	///
 
 	add(description) {

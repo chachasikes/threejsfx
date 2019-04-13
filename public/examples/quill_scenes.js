@@ -1,29 +1,13 @@
-
-// Based off proximity_events.js
-
-
-///
-/// A json graph with some objects in it.
-/// In this example I exported it as a module
-///
-/// The root is an object, and it will be instanced as decorated with a couple of behaviors, notably a renderer and a scene
-/// Then it also has children with other behaviors such as 3d objects
-///
-
-// This will get instanced as the root of the scene
 export const example = {
-
-	// a scene behavior - has a listener that watches for any children being attached
 	scene: 0,
 
-	// a collection of children (itself a behavior)
-	children: [
+	group: [
 
 		// a skybox
 		{
 			name:"sky",
 			sky:{
-				art:"./art/quillustrations/skyboxes/handpainted/jungle_trees_equirectangular.png"
+				art:"art/quillustrations/skyboxes/handpainted/jungle_trees_equirectangular.png"
 			}
 		},
 
@@ -66,7 +50,7 @@ export const example = {
 		{
 			name:"scene_1",
 			mesh:{
-				art:"./art/quillustrations/forest_rough_sketch",
+				art:"art/quillustrations/forest_rough_sketch",
 				position:{x:0,y:0,z:0},
 				scale:{x:10,y:10,z:10},
 				color:0x27ff12,

@@ -6,8 +6,9 @@ export class BehaviorTextPanel extends BehaviorMesh {
 		props.art = "sphere" // temporary
 		super(props,blox)
 		this.props = props
+		this.element = blox.element
 
-		let material = this.makeMaterial(props.say || "hello", element)
+		let material = this.makeMaterial(props.say || "hello", this.element)
 		let geometry = this.makeGeometry(1,1)
 
 		if(this.material) this.material.dispose()
@@ -95,7 +96,7 @@ export class BehaviorTextPanel extends BehaviorMesh {
 		// a scratch canvas
 		// TODO caller needs to be able to set various params here
 
-		let scratch = document.getElementById(element).createElement("canvas")
+		let scratch = document.querySelector(element).createElement("canvas")
 		scratch.width = w
 		scratch.height = h
 		let context = scratch.getContext("2d")

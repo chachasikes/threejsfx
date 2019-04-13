@@ -61,6 +61,8 @@ See <a href="https://github.com/anselm/blox">github.com/anselm/blox</a>
 <a href="#example_walking.js"><span>Walking</span></a>
 <a href="#cherry_blossoms.js"><span>Crude Particle Effects - Cherry Blossoms</span></a>
 <a href="#proximity_events.js"><span>Simple Collisions - Fox in Field</span></a>
+<a href="#quill_scenes.js"><span>Quill illustration in hand painted skybox</span></a>
+<!-- <a href="#animatic.js"><span>Animatic</span></a> -->
 </div>
 
 <script type=module>
@@ -74,6 +76,7 @@ window.onload = (blarg) => {
 		if(!hash || !hash.length) return
 		let file = "../examples/"+hash
 		blox = new Blox(file)
+		blox.element = "#blox"
 	}
 	window.addEventListener("hashchange", gotohash)
 	gotohash()
@@ -141,6 +144,6 @@ document.body.addEventListener('loadBlox', function (e) {
 	 <a-entity blob="event: anEvent; message: Hello, Metaverse!"></a-entity>
 </a-scene> -->
 
-<div id="blob"></div>
+<div id="blox"></div>
 </body>
 </html>
