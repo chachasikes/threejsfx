@@ -104,7 +104,9 @@ AFRAME.registerComponent('quill', {
 		try {
 			console.log('entity blox', window.Blob, data)
 			let Blob = window.Blob;
-			let blob = new Blob('quill_scenes', el)
+			let blobElement = document.querySelector('a-entity["blob"]');
+			console.log(blobElement);
+			let blob = new Blob('quill_scenes', blobElement)
 		} catch(e) {
 			console.log(e)
 		}
@@ -120,7 +122,7 @@ document.body.addEventListener('loadBlob', function (e) {
 </script>
 
 <a-scene>
-	 <a-entity quill="event: anEvent; message: Hello, Metaverse!"></a-entity>
+	 <a-entity blob="event: anEvent; message: Hello, Metaverse!"></a-entity>
 </a-scene>
 
 <div id="blob"></div>
