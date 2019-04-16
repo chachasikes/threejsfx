@@ -109,26 +109,25 @@ export class BehaviorMesh extends THREE.Mesh {
 	    let mesh = this
 
 		loader.load(url, (gltf) => {
-
 			if(!gltf || !gltf.scene) {
 				return // oh well it tried - doesn't matter if fails
 			}
 
 			// start animations
-	        if(gltf.animations && gltf.animations.length){
-	            let mixer = new THREE.AnimationMixer(gltf.scene)
-	            for(let animation of gltf.animations){
-	                mixer.clipAction(animation).play()
-	            }
-	        }
+      if(gltf.animations && gltf.animations.length){
+          let mixer = new THREE.AnimationMixer(gltf.scene)
+          for(let animation of gltf.animations){
+              mixer.clipAction(animation).play()
+          }
+      }
 
 			// center on self
 			let bbox = new THREE.Box3().setFromObject(gltf.scene)
 			let size = mesh.scale.length()
-		    let resize = size / bbox.getSize(new THREE.Vector3()).length() * 2
-		    let offset = bbox.getCenter(new THREE.Vector3()).multiplyScalar(resize)
-		    gltf.scene.scale.set(resize,resize,resize)
-		    gltf.scene.position.sub(offset)
+	    let resize = size / bbox.getSize(new THREE.Vector3()).length() * 2
+	    let offset = bbox.getCenter(new THREE.Vector3()).multiplyScalar(resize)
+	    gltf.scene.scale.set(resize,resize,resize)
+	    gltf.scene.position.sub(offset)
 
 		    // add to parent
 			mesh.add(gltf.scene)
@@ -211,5 +210,3 @@ export class BehaviorMesh extends THREE.Mesh {
 		}
 	}
 }
-
-

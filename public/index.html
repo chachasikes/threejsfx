@@ -11,7 +11,7 @@
 body { margin: 0; }
 canvas { width: 100%; height: 100% }
 </style>
-<script src="https://aframe.io/releases/0.9.0/aframe.min.js"></script>
+<script src="lib/aframe.min.js"></script>
 <!-- <script src="lib/three.js"></script> -->
 <script src="lib/OrbitControls.js"></script>
 <script src="lib/hilbert3D.js"></script>
@@ -117,16 +117,15 @@ AFRAME.registerComponent('blox', {
 		} else {
 			console.log(data.message);
 		}
-		console.log('Quill initialized')
+		console.log('Blox initialized')
 		try {
 			console.log('entity blox', window.Blox, data)
 			let Blox = window.Blox;
 			let bloxElement = document.querySelector('a-entity[blox]');
-
 			let blox = new Blox('./examples/quill_scenes.js')
-
 			blox.element = 'a-entity[blox]'
-					console.log(bloxElement,blox);
+			window.bloxVR = blox
+			console.log(bloxElement,blox);
 		} catch(e) {
 			console.log(e)
 		}
@@ -135,41 +134,22 @@ AFRAME.registerComponent('blox', {
 
 document.body.addEventListener('enter-vr', function (e) {
 	console.log("entered VR", e)
-
-	var scene = document.querySelector('a-scene');
-
-	if (scene.hasLoaded) {
-	  run();
-	} else {
-	  scene.addEventListener('loaded', run);
-	}
-
-	function run () {
-		console.log('run')
-	  var entity = scene.querySelector('a-entity');
-	  entity.setAttribute('material', 'color', 'red');
-	}
-	let Blox = window.Blox;
-	let bloxVR = new Blox('./examples/quill_scenes.js')
-	bloxVR.element = 'a-entity[blox]'
-
-
+	console.log(window.bloxVR)
 }, false);
 
 document.body.addEventListener('loadBlox', function (e) {
 	// console.log("dispatch loaded", window.Blox)
 	var el = document.querySelector('a-entity[blox]');
-	el.setAttribute('blox', {event: 'anEvent', message: 'Hello, new event! 3'});
-	el.emit('anEvent');
+	el.setAttribute('blox', {event: 'blox_loaded_aframe', message: 'Loaded Blox in a-entity'});
+	el.emit('blox_loaded_aframe');
 }, false);
 </script>
 
 <a-scene>
-  	<a-entity blox="event: anEvent; message: Hello, Metaverse!"></a-entity>
+  	<a-entity blox="event: blox_loaded_aframe; message: Adding Blox"></a-entity>
 		<a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" shadow></a-box>
 		<a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" shadow></a-sphere>
 		<a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>
-		<a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4" shadow></a-plane>
 </a-scene>
 
 <!-- <div id="blox"></div> -->
