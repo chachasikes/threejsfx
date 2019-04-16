@@ -43,7 +43,7 @@ class XRSupport {
 		// Set during the XR.getDisplays call below
 		this.displays = null
 
-		// Set during this.startSession below		
+		// Set during this.startSession below
 		this.display = null
 		this.session = null
 

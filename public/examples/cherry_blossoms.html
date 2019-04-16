@@ -24,7 +24,7 @@ canvas { width: 100%; height: 100% }
 <script src="../lib/ammo.js"></script>
 <script src="../lib/XRSupport.js"></script>
 <script src="../lib/three.proton.js"></script>
-
+<script src="../lib/webxr-polyfill.js"></script>
 <style>
 
 h1 { font-family: Verdana, Geneva, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Verdana, Geneva, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Verdana, Geneva, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
@@ -39,6 +39,10 @@ span {
 	 margin:4px;
 	 border-radius:7px;
 }
+
+button {
+	padding: 10px;
+}
 </style>
 </head>
 <body>
@@ -52,21 +56,31 @@ import {Blox} from "../js/Blox.js"
 let filename = "./cherry_blossoms.js"
 
 function loadBlox() {
+	console.log('loading blox', filename)
 	// (this will fire off a threejs renderer that will start painting a display)
 	let blox = new Blox(filename)
 }
 
 async function checkForXRSupport() {
-	if(navigator.xr) {
-		navigator.xr.supportsSessionMode('immersive-vr').then(() => {
-			var button = document.createElement("button")
-			button.innerHTML = "Enter VR"
-			button.addEventListener("click", loadBlox)
-			document.body.appendChild(button)
-			window.supportsVR = true // hack
-		}).catch((reason) => {
-			console.log("XR Session not supported for reasons: " + reason);
-		})
+	// console.log(navigator.XR)
+	if(navigator.XR) {
+		if (navigator.XR._getVRDisplaysFinished) {
+				var button = document.createElement("button")
+				button.innerHTML = "Enter VR"
+				button.addEventListener("click", loadBlox)
+				// document.body.appendChild(button)
+				document.body.insertBefore(button, document.querySelector('.webxr-realities'));
+				window.supportsVR = true // hack
+		}
+		// navigator.xr.supportsSessionMode('immersive-vr').then(() => {
+		// 	var button = document.createElement("button")
+		// 	button.innerHTML = "Enter VR"
+		// 	button.addEventListener("click", loadBlox)
+		// 	document.body.appendChild(button)
+		// 	window.supportsVR = true // hack
+		// }).catch((reason) => {
+		// 	console.log("XR Session not supported for reasons: " + reason);
+		// })
 	} else {
 		loadBlox()
 	}

@@ -114,4 +114,3 @@ export let cherry_blossoms = {
 
 	]
 }
-
