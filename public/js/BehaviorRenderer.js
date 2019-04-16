@@ -12,6 +12,7 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 		this.pov = 0
 
 		// supports VR? HACK
+		console.log(window.supportsVR)
 		let usevr = window.supportsVR ? true : false
 
 		this.PASSTHROUGH = XRSupport.supportsARKit()
@@ -53,7 +54,7 @@ export class BehaviorRenderer extends THREE.WebGLRenderer {
 
 	renderScene() {
 		if(!this.scene || !this.camera) return
-		this.render(this.scene,this.camera)			
+		this.render(this.scene,this.camera)
 	}
 
 	render3() {
@@ -113,4 +114,3 @@ export class BehaviorScene extends THREE.Scene {
 		})
 	}
 }
-
