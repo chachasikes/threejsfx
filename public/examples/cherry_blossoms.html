@@ -25,6 +25,7 @@ canvas { width: 100%; height: 100% }
 <script src="../lib/XRSupport.js"></script>
 <script src="../lib/three.proton.js"></script>
 <script src="../lib/webxr-polyfill.js"></script>
+
 <style>
 
 h1 { font-family: Verdana, Geneva, sans-serif; font-size: 24px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } h3 { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } p { font-family: Verdana, Geneva, sans-serif; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; } blockquote { font-family: Verdana, Geneva, sans-serif; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } pre { font-family: Verdana, Geneva, sans-serif; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
@@ -47,43 +48,37 @@ button {
 </head>
 <body>
 
-<a href="https://github.com/anselm/blox/blob/master/public/examples/cherry_blossoms.js" style="border:3px solid gray; position:absolute;top:0;right:0;background:white;font-size:1em;text-decoration:none;border-radius:8px;margin:4px;padding:3px">View Source</a>
+<a href="/examples/cherry_blossoms.js" style="border:3px solid gray; position:absolute;top:0;right:0;background:white;font-size:1em;text-decoration:none;border-radius:8px;margin:4px;padding:3px">View Source</a>
 
 <script type=module>
 
 import {Blox} from "../js/Blox.js"
-
+var polyfill = new WebXRPolyfill();
 let filename = "./cherry_blossoms.js"
 
 function loadBlox() {
 	console.log('loading blox', filename)
 	// (this will fire off a threejs renderer that will start painting a display)
 	let blox = new Blox(filename)
+	window.blox = blox
+	console.log('blox', window.blox)
 }
 
 async function checkForXRSupport() {
-	// console.log(navigator.XR)
-	if(navigator.XR) {
-		if (navigator.XR._getVRDisplaysFinished) {
-				var button = document.createElement("button")
-				button.innerHTML = "Enter VR"
-				button.addEventListener("click", loadBlox)
-				// document.body.appendChild(button)
-				document.body.insertBefore(button, document.querySelector('.webxr-realities'));
-				window.supportsVR = true // hack
-		}
-		// navigator.xr.supportsSessionMode('immersive-vr').then(() => {
-		// 	var button = document.createElement("button")
-		// 	button.innerHTML = "Enter VR"
-		// 	button.addEventListener("click", loadBlox)
-		// 	document.body.appendChild(button)
-		// 	window.supportsVR = true // hack
-		// }).catch((reason) => {
-		// 	console.log("XR Session not supported for reasons: " + reason);
-		// })
-	} else {
-		loadBlox()
-	}
+	console.log(navigator)
+	// if(navigator.XR) {
+	// 	// if (navigator.XR._getVRDisplaysFinished) {
+	// 	// 		var button = document.createElement("button")
+	// 	// 		button.innerHTML = "Enter VR"
+	// 	// 		button.addEventListener("click", loadBlox)
+	// 	// 		// document.body.appendChild(button)
+	// 	// 		document.body.insertBefore(button, document.querySelector('.webxr-realities'));
+	// 	// 		window.supportsVR = true // hack
+	// 	// }
+	//
+	// } else {
+	// 	loadBlox()
+	// }
 }
 
 window.onload = checkForXRSupport
