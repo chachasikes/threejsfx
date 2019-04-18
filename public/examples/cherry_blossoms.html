@@ -81,13 +81,13 @@ button {
 	let gl = null;
 	let renderer = null;
 	let filename = "./cherry_blossoms.js"
-	let scene = null;
+	window.scene = {};
 	importModule("../js/Blox.js").then((b) => {
 
 		function loadBlox(b) {
 			// (this will fire off a threejs renderer that will start painting a display)
 			let blox = new b.Blox(filename)
-			scene = Object.assign(scene,blox)
+			window.scene = Object.assign(window.scene, blox)
 		}
 
 		function initXR(b) {
