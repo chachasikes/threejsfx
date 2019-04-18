@@ -65,7 +65,7 @@ button {
 
 <a href="/examples/cherry_blossoms.js" style="border:3px solid gray; position:absolute;top:0;right:0;background:white;font-size:1em;text-decoration:none;border-radius:8px;margin:4px;padding:3px">View Source</a>
 <script src='js/gl-matrix-min.js'></script>
-<!-- <script src='js/cottontail.js'></script> -->
+<script src='js/cottontail.js'></script>
 
 <script type=module>
 	import { importModule } from "../lib/importModule.js";
@@ -83,11 +83,8 @@ button {
 	let filename = "./cherry_blossoms.js"
 	let scene = null;
 	importModule("../js/Blox.js").then((b) => {
-
-		function loadBlox(b) {
-			// (this will fire off a threejs renderer that will start painting a display)
-			let blox = new b.Blox(filename)
-		}
+		scene = new b.Blox();
+		console.log(b, scene)
 
 		function initXR() {
 			xrButton = new XRDeviceButton({
@@ -102,8 +99,7 @@ button {
 
 					if (!device)
 						return;
-					window.supportsVR = true // hack
-					loadBlox();
+
 					// In order for a non-immersive session to be used we must provide
 					// an outputContext, which indicates the canvas that will contain
 					// results of the session's rendering.
@@ -117,7 +113,7 @@ button {
 								// Add the canvas to the document once we know that it will be
 								// rendered to.
 								document.body.appendChild(outputCanvas);
-								o	loadBlox();nSessionStarted(session);
+								onSessionStarted(session);
 							});
 				});
 			}
