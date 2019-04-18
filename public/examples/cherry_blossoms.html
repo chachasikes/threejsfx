@@ -84,12 +84,13 @@ button {
 	let scene = {};
 	importModule("../js/Blox.js").then((b) => {
 
-		function loadBlox(b) {
+		function loadBloxVR(b) {
 			// (this will fire off a threejs renderer that will start painting a display)
-			let blox = new b.Blox(filename)
+			// let blox = new b.Blox(filename)
+			let blox = {}
 			let sceneExample = new CubeSeaScene();
+			console.log(sceneExample);
 			let usefulSceneExample = {
-				hero_node: sceneExample.hero_node,
 				draw: sceneExample.draw,
 				drawViewArray: sceneExample.drawViewArray,
 				onDrawViews: sceneExample.onDrawViews,
@@ -97,10 +98,16 @@ button {
 				setRenderer: sceneExample.setRenderer,
 				endFrame: sceneExample.endFrame
 			}
-			scene = blox = Object.assign(usefulSceneExample,blox)
+			scene = sceneExample
+			//blox = Object.assign(usefulSceneExample,blox)
 			console.log(scene)
 		}
 
+		function loadBloxPreview(b) {
+			// (this will fire off a threejs renderer that will start painting a display)
+			let blox = new b.Blox(filename)
+		}
+		loadBloxPreview(b);
 		function initXR(b) {
 			xrButton = new XRDeviceButton({
 				onRequestSession: onRequestSession,
@@ -115,22 +122,22 @@ button {
 					if (!device)
 						return;
 					window.supportsVR = true // hack
-					loadBlox(b)
+					loadBloxVR(b)
 					// In order for a non-immersive session to be used we must provide
 					// an outputContext, which indicates the canvas that will contain
 					// results of the session's rendering.
-					let outputCanvas = document.createElement('canvas');
-					let ctx = outputCanvas.getContext('xrpresent');
-
-					// Pick an arbitrary device for the magic window content and start
-					// up a non-immersive session if possible.
-					device.requestSession({ outputContext: ctx })
-							.then((session) => {
-								// Add the canvas to the document once we know that it will be
-								// rendered to.
-								document.body.appendChild(outputCanvas);
-								onSessionStarted(session);
-							});
+					// let outputCanvas = document.createElement('canvas');
+					// let ctx = outputCanvas.getContext('xrpresent');
+					//
+					// // Pick an arbitrary device for the magic window content and start
+					// // up a non-immersive session if possible.
+					// device.requestSession({ outputContext: ctx })
+					// 		.then((session) => {
+					// 			// Add the canvas to the document once we know that it will be
+					// 			// rendered to.
+					// 			document.body.appendChild(outputCanvas);
+					// 			onSessionStarted(session);
+					// 		});
 				});
 			}
 		}
