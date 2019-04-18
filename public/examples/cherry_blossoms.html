@@ -84,9 +84,10 @@ button {
 	let gl = null;
 	let renderer = null;
 	let filename = "./cherry_blossoms.js"
-	importModule("../js/Blox.js").then((blox) => {
-
-		let scene = new blox.Blox();
+	let scene = null;
+	importModule("../js/Blox.js").then((b) => {
+		scene = new b.Blox();
+		console.log(b, scene)
 
 		function initXR() {
 			xrButton = new XRDeviceButton({
