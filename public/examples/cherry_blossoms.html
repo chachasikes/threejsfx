@@ -87,6 +87,7 @@ button {
 		function loadBlox(b) {
 			// (this will fire off a threejs renderer that will start painting a display)
 			let blox = new b.Blox(filename)
+			scene = Object.assign(scene,blox)
 		}
 
 		function initXR(b) {
