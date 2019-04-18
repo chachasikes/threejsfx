@@ -103,7 +103,7 @@ button {
 					if (!device)
 						return;
 					window.supportsVR = true // hack
-					loadBlox();
+					loadBlox()
 					// In order for a non-immersive session to be used we must provide
 					// an outputContext, which indicates the canvas that will contain
 					// results of the session's rendering.
@@ -117,7 +117,7 @@ button {
 								// Add the canvas to the document once we know that it will be
 								// rendered to.
 								document.body.appendChild(outputCanvas);
-								o	loadBlox();nSessionStarted(session);
+								onSessionStarted(session);
 							});
 				});
 			}
