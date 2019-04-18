@@ -98,7 +98,7 @@ button {
 				setRenderer: sceneExample.setRenderer,
 				endFrame: sceneExample.endFrame
 			}
-			scene = sceneExample
+			scene = blox
 			//blox = Object.assign(usefulSceneExample,blox)
 			console.log(scene)
 		}
@@ -159,7 +159,7 @@ button {
 
 				renderer = new Renderer(gl);
 
-				scene.setRenderer(renderer);
+				// scene.setRenderer(renderer);
 			}
 
 			session.baseLayer = new XRWebGLLayer(session, gl);
@@ -195,7 +195,7 @@ button {
 											 xrNonExclusiveFrameOfRef;
 			let pose = frame.getDevicePose(frameOfRef);
 
-			scene.startFrame();
+			// scene.startFrame();
 
 			session.requestAnimationFrame(onXRFrame);
 
@@ -208,11 +208,11 @@ button {
 					gl.viewport(viewport.x, viewport.y,
 											viewport.width, viewport.height);
 
-					scene.draw(view.projectionMatrix, pose.getViewMatrix(view));
+					// scene.draw(view.projectionMatrix, pose.getViewMatrix(view));
 				}
 			}
 
-			scene.endFrame();
+			// scene.endFrame();
 		}
 
 		// Start the XR application.
