@@ -89,7 +89,7 @@ button {
 			let blox = new b.Blox(filename)
 		}
 
-		function initXR() {
+		function initXR(b) {
 			xrButton = new XRDeviceButton({
 				onRequestSession: onRequestSession,
 				onEndSession: onEndSession
@@ -103,7 +103,7 @@ button {
 					if (!device)
 						return;
 					window.supportsVR = true // hack
-					loadBlox()
+					loadBlox(b)
 					// In order for a non-immersive session to be used we must provide
 					// an outputContext, which indicates the canvas that will contain
 					// results of the session's rendering.
@@ -197,7 +197,7 @@ button {
 		}
 
 		// Start the XR application.
-		initXR();
+		initXR(b);
 	});
 
 
