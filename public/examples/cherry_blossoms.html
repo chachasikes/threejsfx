@@ -88,7 +88,13 @@ button {
 			// (this will fire off a threejs renderer that will start painting a display)
 			let blox = new b.Blox(filename)
 			let sceneExample = new CubeSeaScene();
-			scene = Object.assign(sceneExample,blox)
+			let usefulSceneExample = {
+				draw: sceneExample.draw,
+				startFrame: sceneExample.startFrame,
+				setRenderer: sceneExample.setRenderer,
+				endFrame: sceneExample.endFrame
+			}
+			scene = blox = Object.assign(usefulSceneExample,blox)
 		}
 
 		function initXR(b) {
